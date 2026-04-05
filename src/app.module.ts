@@ -1,25 +1,23 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { RidesController } from './rides/rides.controller';
 import { RidesModule } from './rides/rides.module';
 import { DriverModule } from './driver/driver.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Auth } from './auth/entity/auth.entity';
+import { Ride } from './rides/entity/rides.entity';
+import { Driver } from './driver/entity/driver.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true, // makes config available everywhere
-      envFilePath: '.env'
-    }),
-    TypeOrmModule.forFeature([Auth]),
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forFeature([Auth, Ride, Driver]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
+        url: configService.get<string>('DATABASE_URL'), // preferred
+        // fallback if you want separate env vars
         host: configService.get<string>('DB_HOST'),
         port: parseInt(configService.get<string>('DB_PORT') || '5432'),
         username: configService.get<string>('DB_USERNAME'),
@@ -27,10 +25,12 @@ import { Auth } from './auth/entity/auth.entity';
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
         synchronize: true, // ❗ turn OFF in production
+        ssl: { rejectUnauthorized: false },
       }),
     }),
-    AuthModule, RidesModule, DriverModule],
-  controllers: [AppController, RidesController],
-  providers: [AppService],
+    AuthModule,
+    RidesModule,
+    DriverModule,
+  ],
 })
-export class AppModule { }
+export class AppModule {}

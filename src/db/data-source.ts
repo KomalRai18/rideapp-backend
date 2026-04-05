@@ -7,18 +7,17 @@ import { Driver } from '../driver/entity/driver.entity';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-    type: 'postgres',
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT || '5432'),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    synchronize: false,
-    logging: true,
-    entities: [Auth, Ride, Driver],
-    migrations: [__dirname + '/migrations/*.ts'],
-    subscribers: [],
-    ssl: {
-        rejectUnauthorized: false,
-    },
+  type: 'postgres',
+  url: process.env.DATABASE_URL, // prefer full URL
+  // fallback if you want separate vars:
+  // host: process.env.DB_HOST,
+  // port: parseInt(process.env.DB_PORT || '5432'),
+  // username: process.env.DB_USERNAME,
+  // password: process.env.DB_PASSWORD,
+  // database: process.env.DB_NAME,
+  synchronize: false, // migrations recommended for prod
+  logging: true,
+  entities: [Auth, Ride, Driver],
+  migrations: [__dirname + '/migrations/*.ts'],
+  ssl: { rejectUnauthorized: false },
 });
