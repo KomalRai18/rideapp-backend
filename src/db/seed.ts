@@ -3,7 +3,7 @@ import { Auth } from '../auth/entity/auth.entity';
 import * as bcrypt from 'bcrypt';
 
 async function seed() {
-    console.log('🌱 Starting database seeding...');
+    console.log('Starting database seeding...');
 
     try {
         await AppDataSource.initialize();
