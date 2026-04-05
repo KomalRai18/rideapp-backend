@@ -7,8 +7,10 @@ import {
   UpdateDateColumn,
   JoinColumn,
 } from 'typeorm';
-import { Driver } from 'src/driver/entity/driver.entity';
-import { FareType } from 'src/config/enums/fare.enum';
+// import { Driver } from 'src/driver/entity/driver.entity';
+import {Driver} from '../../driver/entity/driver.entity'
+// import { FareType } from 'src/config/enums/fare.enum';
+import { FareType } from '../../config/enums/fare.enum';
 
 @Entity({ name: 'rides' })
 export class Ride {
