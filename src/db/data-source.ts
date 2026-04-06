@@ -20,4 +20,12 @@ export const AppDataSource = new DataSource({
   entities: [Auth, Ride, Driver],
   migrations: [__dirname + '/migrations/*.ts'],
   ssl: { rejectUnauthorized: false },
+   extra: {
+    max: 5,
+    min: 1,
+    idleTimeoutMillis: 20000,
+    connectionTimeoutMillis: 15000,
+    statement_timeout: 30000,
+    query_timeout: 30000,
+  },
 });
