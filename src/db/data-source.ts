@@ -15,9 +15,11 @@ export const AppDataSource = new DataSource({
   migrations: [__dirname + '/migrations/*.ts'],
   ssl: { rejectUnauthorized: false },
   extra: {
-    max: 20,
-    min: 2,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
+    max: 5,
+    min: 1,
+    idleTimeoutMillis: 20000,
+    connectionTimeoutMillis: 15000,
+    statement_timeout: 30000,
+    query_timeout: 30000,
   },
 });

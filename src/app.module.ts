@@ -24,18 +24,20 @@ import { Driver } from './driver/entity/driver.entity';
           url: databaseUrl,
           autoLoadEntities: true,
           synchronize: false, // OFF in production
-          logging: process.env.NODE_ENV !== 'production', // Only log in dev
+          logging: process.env.NODE_ENV !== 'production',
           ssl: {
             rejectUnauthorized: false,
           },
           extra: {
-            max: 20, // Increased from 1
-            min: 2,
-            idleTimeoutMillis: 30000,
-            connectionTimeoutMillis: 10000,
+            max: 5, // Reduced for connection pooler (less aggressive)
+            min: 1,
+            idleTimeoutMillis: 20000,
+            connectionTimeoutMillis: 15000,
+            statement_timeout: 30000,
+            query_timeout: 30000,
           },
-          retryAttempts: 3,
-          retryDelay: 1000,
+          retryAttempts: 5,
+          retryDelay: 2000,
         };
       },
     }),
