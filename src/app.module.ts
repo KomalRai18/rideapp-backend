@@ -28,6 +28,11 @@ import { Driver } from './driver/entity/driver.entity';
         autoLoadEntities: true,
         synchronize: true, // ❗ turn OFF in production
         ssl: { rejectUnauthorized: false },
+        extra:{ 
+          max: 1,
+          connectionTimeoutMilis:  5000,
+        },
+        connectTimeoutMS: 5000
       }),
     }),
     AuthModule,
