@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { RidesModule } from './rides/rides.module';
 import { DriverModule } from './driver/driver.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { Auth } from './auth/entity/auth.entity';
 import { Ride } from './rides/entity/rides.entity';
 import { Driver } from './driver/entity/driver.entity';
@@ -32,5 +34,7 @@ import { Driver } from './driver/entity/driver.entity';
     RidesModule,
     DriverModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
