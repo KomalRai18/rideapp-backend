@@ -19,6 +19,13 @@ import { Driver } from './driver/entity/driver.entity';
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get<string>('DATABASE_URL');
         
+        if (!databaseUrl) {
+          console.error('[TypeORM] DATABASE_URL is not set!');
+          throw new Error('DATABASE_URL environment variable is not defined');
+        }
+
+        console.log('[TypeORM] Connecting to database...');
+        
         return {
           type: 'postgres',
           url: databaseUrl,
