@@ -8,16 +8,16 @@ dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  url: process.env.DATABASE_URL, // prefer full URL
-  // fallback if you want separate vars:
-  // host: process.env.DB_HOST,
-  // port: parseInt(process.env.DB_PORT || '5432'),
-  // username: process.env.DB_USERNAME,
-  // password: process.env.DB_PASSWORD,
-  // database: process.env.DB_NAME,
+  url: process.env.DATABASE_URL,
   synchronize: false, // migrations recommended for prod
-  logging: true,
+  logging: process.env.NODE_ENV !== 'production',
   entities: [Auth, Ride, Driver],
   migrations: [__dirname + '/migrations/*.ts'],
   ssl: { rejectUnauthorized: false },
+  extra: {
+    max: 20,
+    min: 2,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
+  },
 });

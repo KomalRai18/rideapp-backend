@@ -16,24 +16,28 @@ import { Driver } from './driver/entity/driver.entity';
     TypeOrmModule.forFeature([Auth, Ride, Driver]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get<string>('DATABASE_URL'), // preferred
-        // fallback if you want separate env vars
-        host: configService.get<string>('DB_HOST'),
-        port: parseInt(configService.get<string>('DB_PORT') || '5432'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        autoLoadEntities: true,
-        synchronize: true, // ❗ turn OFF in production
-        ssl: { rejectUnauthorized: false },
-        extra:{ 
-          max: 1,
-          connectionTimeoutMilis:  5000,
-        },
-        connectTimeoutMS: 5000
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+        
+        return {
+          type: 'postgres',
+          url: databaseUrl,
+          autoLoadEntities: true,
+          synchronize: false, // OFF in production
+          logging: process.env.NODE_ENV !== 'production', // Only log in dev
+          ssl: {
+            rejectUnauthorized: false,
+          },
+          extra: {
+            max: 20, // Increased from 1
+            min: 2,
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 10000,
+          },
+          retryAttempts: 3,
+          retryDelay: 1000,
+        };
+      },
     }),
     AuthModule,
     RidesModule,
